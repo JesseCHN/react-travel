@@ -16,6 +16,7 @@ import {
   // fetchRecommendProductStartActionCreator, fetchRecommendProductSuccessActionCreator, fetchRecommendProductFailActionCreator,
   giveMeDataActionCreator
 } from '../../redux/recommendProducts/recommendProductsActions';
+import { MainLayout } from '../../layouts/mainLayout';
 
 const mapStateToProps = (state: RootState) => {
   return {
@@ -106,48 +107,43 @@ class HomePageComponent extends React.Component<PropsType, State> {
     if (error) {
       return <div>网站出错：{error}</div>;
     }
-    return <div>
-      <Header></Header>
-      {/* 页面内容 content */}
-      <div className={styles["page-content"]}>
-        <Row style={{ marginTop: 20 }}>
-          <Col span={6}>
-            <SideMenu />
-          </Col>
-          <Col span={18}>
-            <Carousel />
-          </Col>
-        </Row>
-        <ProductCollection
-          title={
-            <Typography.Title level={3} type="warning">
-              {t('home_page.hot_recommended')}
-            </Typography.Title>
-          }
-          sideImage={sideImage}
-          products={productList[0].touristRoutes}
-        />
-        <ProductCollection
-          title={
-            <Typography.Title level={3} type="danger">
-              新品上市
-            </Typography.Title>
-          }
-          sideImage={sideImage2}
-          products={productList[1].touristRoutes}
-        />
-        <ProductCollection
-          title={
-            <Typography.Title level={3} type="success">
-              国内游推荐
-            </Typography.Title>
-          }
-          sideImage={sideImage3}
-          products={productList[2].touristRoutes}
-        />
-      </div>
-      <Footer></Footer>
-    </div>
+    return <MainLayout>
+      <Row style={{ marginTop: 20 }}>
+        <Col span={6}>
+          <SideMenu />
+        </Col>
+        <Col span={18}>
+          <Carousel />
+        </Col>
+      </Row>
+      <ProductCollection
+        title={
+          <Typography.Title level={3} type="warning">
+            {t('home_page.hot_recommended')}
+          </Typography.Title>
+        }
+        sideImage={sideImage}
+        products={productList[0].touristRoutes}
+      />
+      <ProductCollection
+        title={
+          <Typography.Title level={3} type="danger">
+            新品上市
+          </Typography.Title>
+        }
+        sideImage={sideImage2}
+        products={productList[1].touristRoutes}
+      />
+      <ProductCollection
+        title={
+          <Typography.Title level={3} type="success">
+            国内游推荐
+          </Typography.Title>
+        }
+        sideImage={sideImage3}
+        products={productList[2].touristRoutes}
+      />
+    </MainLayout>
   }
 }
 
