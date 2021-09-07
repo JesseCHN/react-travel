@@ -4,13 +4,23 @@ import { RouteComponentProps, useParams } from "react-router-dom";
 import axios from "axios";
 import { Spin, Row, Col, Divider, Typography, Anchor, Menu } from "antd";
 import styles from "./DetailPage.module.css";
-import { Header, Footer, ProductIntro, ProductComments } from "../../components";
-import { DatePicker, Space } from "antd";
+import {
+  Header,
+  Footer,
+  ProductIntro,
+  ProductComments,
+} from "../../components";
+import { DatePicker, Space, Button } from "antd";
 import { commentMockData } from "./mockup";
-import { productDetailSlice,getProductDetail } from "../../redux/productDetail/slice";
+import {
+  productDetailSlice,
+  getProductDetail,
+} from "../../redux/productDetail/slice";
 import { useSelector } from "../../redux/hooks";
 import { useDispatch } from "react-redux";
 import { MainLayout } from "../../layouts/mainLayout";
+import { ShoppingCartOutlined } from "@ant-design/icons";
+import { addShoppingCartItem } from "../../redux/shoppingCart/slice";
 
 const { RangePicker } = DatePicker;
 
@@ -24,30 +34,17 @@ export const DetailPage: React.FC<RouteComponentProps<MatchParams>> = () => {
   // const [product, setProduct] = useState<any>(null);
   // const [error, setError] = useState<string | null>(null);
 
-  const loading = useSelector(state => state.productDetail.loading)
-  const error = useSelector(state => state.productDetail.error)
-  const product = useSelector(state => state.productDetail.data)
+  const loading = useSelector((state) => state.productDetail.loading);
+  const error = useSelector((state) => state.productDetail.error);
+  const product = useSelector((state) => state.productDetail.data);
 
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     setLoading(true);
-  //     try {
-  //       const { data } = await axios.get(
-  //         `http://123.56.149.216:8080/api/touristRoutes/${touristRouteId}`
-  //       );
-  //       setProduct(data);
-  //       setLoading(false);
-  //     } catch (error) {
-  //       setError(error.message);
-  //       setLoading(false);
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
+  const jwt = useSelector(s => s.user.token) as string
+  const shoppingCartLoading = useSelector(s => s.shoppingCart.loading)
+
   useEffect(() => {
-    dispatch(getProductDetail(touristRouteId))
+    dispatch(getProductDetail(touristRouteId));
   }, []);
   if (loading) {
     return (
@@ -68,6 +65,7 @@ export const DetailPage: React.FC<RouteComponentProps<MatchParams>> = () => {
   }
   return (
     <MainLayout>
+      {/* 产品简介 与 日期选择 */}
       <div className={styles["product-intro-container"]}>
         <Row>
           <Col span={13}>
@@ -83,6 +81,20 @@ export const DetailPage: React.FC<RouteComponentProps<MatchParams>> = () => {
             />
           </Col>
           <Col span={11}>
+            <Button
+              style={{ marginTop: 50, marginBottom: 30, display: "block" }}
+              type="primary"
+              danger
+              loading={shoppingCartLoading}
+              onClick={() => {
+                dispatch(
+                  addShoppingCartItem({ jwt, touristRouteId: product.id })
+                );
+              }}
+            >
+              <ShoppingCartOutlined />
+              放入购物车
+            </Button>
             <RangePicker open style={{ marginTop: 20 }} />
           </Col>
         </Row>
